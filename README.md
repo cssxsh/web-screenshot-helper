@@ -1,6 +1,6 @@
 # [Web Screenshot Helper](https://github.com/cssxsh/web-screenshot-helper)
 
-> 基于 Mirai Selenium Plugin 的 Forward 扩展
+> 基于 Mirai Selenium Plugin 的 网页截图插件
 
 相关项目:  
 [Mirai Selenium Plugin](https://github.com/cssxsh/mirai-selenium-plugin) 前置插件，用于 Selenium 框架的初始化
@@ -9,7 +9,7 @@
 
 ## 关键词
 
-*   `截图 https://...` 将回打开无头浏览器截取网页图片
+*   `截图 https://...` 将会启用无头浏览器截取网页图片
 
 ## 安装
 
