@@ -1,6 +1,8 @@
 package xyz.cssxsh.mirai.screenshot
 
 import kotlinx.coroutines.*
+import net.mamoe.mirai.console.command.CommandSender.Companion.toCommandSender
+import net.mamoe.mirai.console.permission.PermissionService.Companion.hasPermission
 import net.mamoe.mirai.console.plugin.jvm.*
 import net.mamoe.mirai.contact.Contact.Companion.uploadImage
 import net.mamoe.mirai.event.*
@@ -15,15 +17,18 @@ public object WebScreenshotHelper : KotlinPlugin(
         version = "0.1.0",
     ) {
         author("cssxsh")
+
         dependsOn("xyz.cssxsh.mirai.plugin.mirai-selenium-plugin", ">= 2.1.0")
     }
 ) {
     override fun onEnable() {
         WebScreenshotConfig.reload()
         resolveConfigFile("script").mkdirs()
+        resolveConfigFile("script/www.example.com.js").writeText("""return document.body;""")
+
         globalEventChannel().subscribeMessages {
-            """(?)(?:截图|screenshot)\s+(https://\S+)""".toRegex() findingReply reply@{ match ->
-//                if (toCommandSender().hasPermission(parentPermission).not()) return@reply null
+            """(?i)(?:截图|screenshot)\s+(https://\S+)""".toRegex() findingReply reply@{ match ->
+                if (toCommandSender().hasPermission(parentPermission).not()) return@reply null
                 val (urlString) = match.destructured
                 val url = java.net.URL(urlString)
                 val script = resolveConfigFile("script/${url.host}.js")
@@ -33,7 +38,7 @@ public object WebScreenshotHelper : KotlinPlugin(
                 }
                 val temp = useRemoteWebDriver(config = WebScreenshotConfig) { driver ->
                     driver.get(urlString)
-                    logger.warning { "Screenshot For $urlString" }
+                    logger.info { "Screenshot For $urlString" }
                     val element = driver.executeScript(script.readText()) as? TakesScreenshot ?: driver
                     element.getScreenshotAs(OutputType.FILE)
                 }

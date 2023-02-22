@@ -7,6 +7,11 @@
 
 权限ID `xyz.cssxsh.mirai.plugin.web-screenshot-helper:*`
 
+截图采用的是白名单模式  
+你需要在 `config/xyz.cssxsh.mirai.plugin.web-screenshot-helper/script` 下创建建一个 `$host.js` 脚本  
+例如 `www.example.com.js` , 脚本的内容决定截图的内容，一般取 `return document.body;` 即截取整个窗口  
+如果想定制特殊的截图效果，比如去除广告，顶栏之类的。可以爱发电投食。
+
 ## 关键词
 
 *   `截图 https://...` 将会启用无头浏览器截取网页图片
