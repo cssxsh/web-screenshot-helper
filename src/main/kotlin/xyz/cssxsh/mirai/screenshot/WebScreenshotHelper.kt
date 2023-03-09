@@ -4,6 +4,7 @@ import kotlinx.coroutines.*
 import net.mamoe.mirai.console.command.CommandSender.Companion.toCommandSender
 import net.mamoe.mirai.console.permission.PermissionService.Companion.hasPermission
 import net.mamoe.mirai.console.plugin.jvm.*
+import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.contact.Contact.Companion.uploadImage
 import net.mamoe.mirai.event.*
 import net.mamoe.mirai.utils.*
@@ -34,7 +35,11 @@ public object WebScreenshotHelper : KotlinPlugin(
                 val script = resolveConfigFile("script/${url.host}.js")
                 if (script.exists().not()) {
                     logger.warning { "No Found $script" }
-                    return@reply null
+                    if ((sender as? NormalMember)?.isOperator() != true) {
+                        return@reply null
+                    }
+                    script.writeText("return document.body;")
+
                 }
                 val temp = useRemoteWebDriver(config = WebScreenshotConfig) { driver ->
                     driver.get(urlString)
