@@ -11,7 +11,7 @@ version = "0.1.0"
 
 mavenCentralPublish {
     useCentralS01()
-    singleDevGithubProject("cssxsh", "github-helper", "cssxsh")
+    singleDevGithubProject("cssxsh", "web-screenshot-helper")
     licenseFromGitHubProject("AGPL-3.0")
     workingDir = System.getenv("PUBLICATION_TEMP")?.let { file(it).resolve(projectName) }
         ?: buildDir.resolve("publishing-tmp")
