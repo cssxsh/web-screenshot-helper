@@ -28,7 +28,7 @@ public object WebScreenshotHelper : KotlinPlugin(
         resolveConfigFile("script/www.example.com.js").writeText("""return document.body;""")
 
         globalEventChannel().subscribeMessages {
-            """(?i)(?:截图|screenshot)\s+((https://|http://)\S+)""".toRegex() findingReply reply@{ match ->
+            """(?i)(?:截图|screenshot)\s+(https?://\S+)""".toRegex() findingReply reply@{ match ->
                 if (toCommandSender().hasPermission(parentPermission).not()) return@reply null
                 val (urlString) = match.destructured
                 val url = java.net.URL(urlString)
