@@ -28,9 +28,9 @@ public object WebScreenshotHelper : KotlinPlugin(
         resolveConfigFile("script/www.example.com.js").writeText("""return document.body;""")
 
         globalEventChannel().subscribeMessages {
-            """(?i)(?:截图|screenshot)\s+(https?://\S+)""".toRegex() findingReply reply@{ match ->
+            """(?i)(?:截图|screenshot)\s*(\d+x\d+)?\s+(https?://\S+)""".toRegex() findingReply reply@{ match ->
                 if (toCommandSender().hasPermission(parentPermission).not()) return@reply null
-                val (urlString) = match.destructured
+                val (size, urlString) = match.destructured
                 val url = java.net.URL(urlString)
                 val script = resolveConfigFile("script/${url.host}.js")
                 if (script.exists().not()) {
@@ -39,10 +39,13 @@ public object WebScreenshotHelper : KotlinPlugin(
                         return@reply null
                     }
                     script.writeText("return document.body;")
-
                 }
                 val temp = useRemoteWebDriver(config = WebScreenshotConfig) { driver ->
                     driver.get(urlString)
+                    if (size.isNotEmpty()) {
+                        val (width, height) = size.split("x")
+                        driver.manage().window().size = Dimension(width.toInt(), height.toInt())
+                    }
                     logger.info { "Screenshot For $urlString" }
                     val element = driver.executeScript(script.readText()) as? TakesScreenshot ?: driver
                     element.getScreenshotAs(OutputType.FILE)
