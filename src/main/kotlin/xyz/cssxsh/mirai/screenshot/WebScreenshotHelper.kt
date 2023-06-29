@@ -11,11 +11,12 @@ import net.mamoe.mirai.utils.*
 import org.openqa.selenium.*
 import xyz.cssxsh.selenium.*
 
-public object WebScreenshotHelper : KotlinPlugin(
+@PublishedApi
+internal object WebScreenshotHelper : KotlinPlugin(
     JvmPluginDescription(
         id = "xyz.cssxsh.mirai.plugin.web-screenshot-helper",
         name = "web-screenshot-helper",
-        version = "0.1.0",
+        version = "0.2.0",
     ) {
         author("cssxsh")
 
